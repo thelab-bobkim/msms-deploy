@@ -62,6 +62,16 @@ st.markdown("""
             box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
         }
         
+        /* 사이드바 닫기 버튼 스타일 개선 */
+        [data-testid='stSidebar'] button[kind='header'] {
+            background: #1f77b4 !important;
+            color: white !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 1.2rem !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+        
         /* 사이드바가 열릴 때 전체 화면 */
         [data-testid='stSidebar'][aria-expanded='true'] {
             position: fixed !important;
@@ -70,16 +80,13 @@ st.markdown("""
             width: 100% !important;
             height: 100vh !important;
             z-index: 999998 !important;
-            background-color: white !important;
+            background-color: #f8f9fa !important;
+            overflow-y: auto !important;
         }
         
         [data-testid='stSidebar'][aria-expanded='true'] > div:first-child {
             width: 100% !important;
-        }
-        
-        /* 사이드바가 닫힐 때 숨김 */
-        [data-testid='stSidebar'][aria-expanded='false'] {
-            display: none !important;
+            background-color: #f8f9fa !important;
         }
         
         /* 메인 컨텐츠 전체 너비 사용 */
@@ -259,6 +266,35 @@ st.markdown("""
 
 </style>
 """, unsafe_allow_html=True)
+
+# 모바일 사이드바 개선: 닫기 버튼 추가
+if 'mobile_script_added' not in st.session_state:
+    st.session_state.mobile_script_added = True
+    st.markdown("""
+    <style>
+    /* 모바일 사이드바 하단 닫기 버튼 */
+    @media (max-width: 768px) {
+        .mobile-close-sidebar {
+            position: fixed !important;
+            bottom: 1rem !important;
+            left: 50% !important;
+            transform: translateX(-50%) !important;
+            z-index: 9999999 !important;
+            background: #1f77b4 !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 0.5rem !important;
+            padding: 1rem 2rem !important;
+            font-size: 1.1rem !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+            cursor: pointer !important;
+            min-height: 44px !important;
+            width: auto !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 
 def get_db_connection():
@@ -667,6 +703,30 @@ with st.sidebar:
     else:
         st.warning("프로젝트가 없습니다")
         sel_id = None
+    
+    # 모바일 사이드바 하단 닫기 버튼
+    st.markdown("---")
+    st.markdown("""
+    <div style='text-align: center; padding: 1rem 0;'>
+        <button onclick='document.querySelector("[data-testid=stSidebarCollapsedControl]").click()' 
+                class='mobile-close-sidebar'
+                style='
+                    background: #1f77b4;
+                    color: white;
+                    border: none;
+                    border-radius: 0.5rem;
+                    padding: 1rem 2rem;
+                    font-size: 1.1rem;
+                    font-weight: 600;
+                    cursor: pointer;
+                    width: 100%;
+                    min-height: 44px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                '>
+            ✕ 필터 닫기
+        </button>
+    </div>
+    """, unsafe_allow_html=True)
 
 
 # ====== 메인 영역 ======
