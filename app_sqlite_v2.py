@@ -481,35 +481,23 @@ with st.sidebar:
             'sales_person': '영업담당자'
         })
         
-        # 프로젝트 선택 (Streamlit 1.31.0 호환)
-        st.markdown("---")
-        st.markdown("#### 📌 프로젝트 선택")
-        
-        # 프로젝트 선택박스
-        project_options = ["선택하세요..."] + [f"{row['id']} - {row['client']} ({row['name']})" for _, row in projects_df.iterrows()]
-        selected_project = st.selectbox(
-            "프로젝트를 선택하세요",
-            project_options,
-            key="project_selector"
-        )
-        
-        sel_id = None
-        if selected_project != "선택하세요...":
-            # ID 추출 (예: "C001-2025 - 클라이언트명 (프로젝트명)" → "C001-2025")
-            sel_id = selected_project.split(" - ")[0]
-            st.session_state['selected_project'] = sel_id
-            st.session_state['show_create_form'] = False
-            st.success(f"✅ 선택된 프로젝트: {sel_id}")
-        
-        st.markdown("---")
-        
-        # 데이터프레임 표시
-        st.dataframe(
+        # 데이터프레임 표시 (클릭 가능)
+        event = st.dataframe(
             display_df,
+            on_select="rerun",
+            selection_mode="single-row",
             hide_index=True,
             use_container_width=True,
-            height=400
+            height=600
         )
+        
+        # 프로젝트 선택 처리
+        sel_id = None
+        if event.selection and event.selection.rows:
+            selected_row_idx = event.selection.rows[0]
+            sel_id = projects_df.iloc[selected_row_idx]["id"]
+            st.session_state['selected_project'] = sel_id
+            st.session_state['show_create_form'] = False
     else:
         st.warning("프로젝트가 없습니다")
         sel_id = None
