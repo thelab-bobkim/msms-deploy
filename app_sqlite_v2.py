@@ -482,20 +482,16 @@ with st.sidebar:
         })
         
         # 데이터프레임 표시
-        res = st.dataframe(
+        st.dataframe(
             display_df,
-            on_select="rerun",
-            selection_mode="single-row",
             hide_index=True,
             use_container_width=True,
             height=600
         )
         
         sel_id = None
-        if res.selection.rows:
-            sel_id = projects_df.iloc[res.selection.rows[0]]["id"]
-            st.session_state['selected_project'] = sel_id
-            st.session_state['show_create_form'] = False
+        # Note: on_select 기능은 Streamlit 1.31.0에서 지원하지 않음
+        # 프로젝트 선택은 사이드바의 선택박스를 사용하세요
     else:
         st.warning("프로젝트가 없습니다")
         sel_id = None
