@@ -9,10 +9,58 @@ DB = "msms.db"
 
 st.set_page_config(layout="wide", page_title="MSMS 2026 - 유지보수 관리 시스템", page_icon="🏢")
 
-# 사이드바 폭 설정
-st.markdown("<style>[data-testid='stSidebar'] { min-width: 550px; max-width: 550px; }</style>", unsafe_allow_html=True)
+# 모바일 viewport 메타 태그 추가
+st.markdown("""
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+""", unsafe_allow_html=True)
 
-# 커스텀 CSS
+# 사이드바 폭 설정 (반응형)
+st.markdown("""
+<style>
+    /* 데스크톱: 550px */
+    [data-testid='stSidebar'] { 
+        min-width: 550px; 
+        max-width: 550px; 
+    }
+    
+    /* 태블릿: 350px */
+    @media (max-width: 1024px) {
+        [data-testid='stSidebar'] { 
+            min-width: 350px !important; 
+            max-width: 350px !important; 
+        }
+    }
+    
+    /* 모바일: 자동 축소 */
+    @media (max-width: 768px) {
+        [data-testid='stSidebar'] { 
+            min-width: 280px !important; 
+            max-width: 280px !important; 
+        }
+        
+        /* 사이드바 자동 접기 */
+        [data-testid='stSidebar'][aria-expanded='true'] {
+            min-width: 280px !important;
+        }
+        
+        [data-testid='stSidebar'][aria-expanded='false'] {
+            min-width: 0px !important;
+            margin-left: -280px;
+        }
+    }
+    
+    /* 모바일 가로 스크롤 방지 */
+    @media (max-width: 768px) {
+        .main .block-container {
+            max-width: 100% !important;
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# 커스텀 CSS (반응형 포함)
 st.markdown("""
 <style>
     /* 메인 헤더 */
@@ -23,6 +71,13 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     
+    /* 모바일: 헤더 크기 축소 */
+    @media (max-width: 768px) {
+        .main-header {
+            font-size: 1.5rem;
+        }
+    }
+    
     /* 메트릭 카드 */
     .metric-card {
         background: white;
@@ -30,6 +85,13 @@ st.markdown("""
         border-radius: 0.5rem;
         border: 2px solid #e0e0e0;
         text-align: center;
+    }
+    
+    /* 모바일: 메트릭 카드 패딩 축소 */
+    @media (max-width: 768px) {
+        .metric-card {
+            padding: 1rem;
+        }
     }
     
     /* 수익/손실 색상 */
@@ -42,6 +104,7 @@ st.markdown("""
         border-radius: 0.5rem;
         font-weight: 600;
         transition: all 0.3s ease;
+        min-height: 44px; /* 터치 친화적 크기 */
     }
     
     .stButton>button:hover {
@@ -60,11 +123,32 @@ st.markdown("""
         color: #333;
     }
     
+    /* 모바일: 입력 필드 크기 확대 */
+    @media (max-width: 768px) {
+        .stSelectbox select,
+        .stTextInput input {
+            font-size: 16px !important; /* iOS 확대 방지 */
+            min-height: 44px !important; /* 터치 친화적 */
+        }
+    }
+    
     /* 데이터프레임 헤더 */
     .stDataFrame thead tr th {
         background-color: #1f77b4 !important;
         color: white !important;
         font-weight: 700 !important;
+    }
+    
+    /* 모바일: 데이터프레임 폰트 크기 조정 */
+    @media (max-width: 768px) {
+        .stDataFrame {
+            font-size: 0.85rem !important;
+        }
+        
+        .stDataFrame thead tr th {
+            font-size: 0.9rem !important;
+            padding: 0.5rem !important;
+        }
     }
     
     /* 필터 섹션 제목 */
@@ -73,6 +157,13 @@ st.markdown("""
         border-bottom: 2px solid #1f77b4;
         padding-bottom: 0.5rem;
         margin-top: 1rem;
+    }
+    
+    /* 모바일: 제목 크기 조정 */
+    @media (max-width: 768px) {
+        h3 {
+            font-size: 1.2rem;
+        }
     }
     
     /* 프로젝트 카운트 */
@@ -91,6 +182,43 @@ st.markdown("""
         border-color: #1f77b4;
         box-shadow: 0 0 0 0.2rem rgba(31,119,180,0.25);
     }
+    
+    /* 모바일: 컨텐츠 여백 조정 */
+    @media (max-width: 768px) {
+        .block-container {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
+        }
+        
+        /* 테이블 가로 스크롤 */
+        .stDataFrame {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch !important;
+        }
+        
+        /* 컬럼 최소 너비 */
+        .stDataFrame td, .stDataFrame th {
+            white-space: nowrap !important;
+            min-width: 80px !important;
+        }
+        
+        /* 메트릭 그리드 2열 */
+        [data-testid="column"] {
+            min-width: 48% !important;
+            flex: 1 1 48% !important;
+        }
+        
+        /* 터치 친화적 크기 */
+        a, button, .stButton>button, [data-testid="stCheckbox"] {
+            min-height: 44px !important;
+        }
+        
+        /* 입력 필드 터치 최적화 */
+        input, select, textarea {
+            font-size: 16px !important; /* iOS 확대 방지 */
+        }
+    }
+
 </style>
 """, unsafe_allow_html=True)
 
