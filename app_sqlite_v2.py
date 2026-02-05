@@ -7,7 +7,12 @@ from dateutil.relativedelta import relativedelta
 
 DB = "msms.db"
 
-st.set_page_config(layout="wide", page_title="MSMS 2026 - 유지보수 관리 시스템", page_icon="🏢")
+st.set_page_config(
+    layout="wide", 
+    page_title="MSMS 2026 - 유지보수 관리 시스템", 
+    page_icon="🏢",
+    initial_sidebar_state="collapsed"  # 모바일에서 사이드바 기본 접기
+)
 
 # 모바일 viewport 메타 태그 추가
 st.markdown("""
@@ -18,43 +23,65 @@ st.markdown("""
 st.markdown("""
 <style>
     /* 데스크톱: 550px */
-    [data-testid='stSidebar'] { 
-        min-width: 550px; 
-        max-width: 550px; 
+    @media (min-width: 1025px) {
+        [data-testid='stSidebar'] { 
+            min-width: 550px !important; 
+            max-width: 550px !important; 
+        }
+        
+        [data-testid='stSidebar'] > div:first-child {
+            width: 550px !important;
+        }
     }
     
     /* 태블릿: 350px */
-    @media (max-width: 1024px) {
+    @media (min-width: 769px) and (max-width: 1024px) {
         [data-testid='stSidebar'] { 
             min-width: 350px !important; 
             max-width: 350px !important; 
         }
+        
+        [data-testid='stSidebar'] > div:first-child {
+            width: 350px !important;
+        }
     }
     
-    /* 모바일: 자동 축소 */
+    /* 모바일: 전체 화면 오버레이 */
     @media (max-width: 768px) {
-        [data-testid='stSidebar'] { 
-            min-width: 280px !important; 
-            max-width: 280px !important; 
-        }
-        
-        /* 사이드바 자동 접기 */
+        /* 사이드바가 열릴 때 전체 화면 */
         [data-testid='stSidebar'][aria-expanded='true'] {
-            min-width: 280px !important;
+            position: fixed !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            height: 100vh !important;
+            z-index: 999999 !important;
+            background-color: white !important;
         }
         
-        [data-testid='stSidebar'][aria-expanded='false'] {
-            min-width: 0px !important;
-            margin-left: -280px;
+        [data-testid='stSidebar'][aria-expanded='true'] > div:first-child {
+            width: 100% !important;
         }
-    }
-    
-    /* 모바일 가로 스크롤 방지 */
-    @media (max-width: 768px) {
+        
+        /* 사이드바가 닫힐 때 숨김 */
+        [data-testid='stSidebar'][aria-expanded='false'] {
+            display: none !important;
+        }
+        
+        /* 메인 컨텐츠 전체 너비 사용 */
         .main .block-container {
             max-width: 100% !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
+        }
+        
+        /* 사이드바 토글 버튼 항상 표시 */
+        [data-testid='stSidebarCollapsedControl'] {
+            display: block !important;
+            position: fixed !important;
+            top: 0.5rem !important;
+            left: 0.5rem !important;
+            z-index: 999 !important;
         }
     }
 </style>
