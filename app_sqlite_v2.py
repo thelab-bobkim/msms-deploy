@@ -473,12 +473,12 @@ with st.sidebar:
             'cancelled': '❌ 취소'
         })
         
-        display_df = display_df[['id', 'client', 'customer', 'name', 'sales_person', '상태']].rename(columns={
+        display_df = display_df[['id', 'sales_person', 'client', 'customer', 'name', '상태']].rename(columns={
             'id': 'ID',
-            'client': '클라이언트',
+            'sales_person': '영업담당자',
+            'client': '매출처',
             'customer': '고객사',
-            'name': '프로젝트명',
-            'sales_person': '영업담당자'
+            'name': '프로젝트명'
         })
         
         # 데이터프레임 표시 (클릭 가능)
