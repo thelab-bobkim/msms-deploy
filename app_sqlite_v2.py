@@ -481,17 +481,35 @@ with st.sidebar:
             'sales_person': '영업담당자'
         })
         
+        # 프로젝트 선택 (Streamlit 1.31.0 호환)
+        st.markdown("---")
+        st.markdown("#### 📌 프로젝트 선택")
+        
+        # 프로젝트 선택박스
+        project_options = ["선택하세요..."] + [f"{row['id']} - {row['client']} ({row['name']})" for _, row in projects_df.iterrows()]
+        selected_project = st.selectbox(
+            "프로젝트를 선택하세요",
+            project_options,
+            key="project_selector"
+        )
+        
+        sel_id = None
+        if selected_project != "선택하세요...":
+            # ID 추출 (예: "C001-2025 - 클라이언트명 (프로젝트명)" → "C001-2025")
+            sel_id = selected_project.split(" - ")[0]
+            st.session_state['selected_project'] = sel_id
+            st.session_state['show_create_form'] = False
+            st.success(f"✅ 선택된 프로젝트: {sel_id}")
+        
+        st.markdown("---")
+        
         # 데이터프레임 표시
         st.dataframe(
             display_df,
             hide_index=True,
             use_container_width=True,
-            height=600
+            height=400
         )
-        
-        sel_id = None
-        # Note: on_select 기능은 Streamlit 1.31.0에서 지원하지 않음
-        # 프로젝트 선택은 사이드바의 선택박스를 사용하세요
     else:
         st.warning("프로젝트가 없습니다")
         sel_id = None
