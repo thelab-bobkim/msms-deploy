@@ -14,9 +14,9 @@ st.set_page_config(
     initial_sidebar_state="collapsed"  # 모바일에서 사이드바 기본 접기
 )
 
-# 모바일 viewport 메타 태그 추가
+# 모바일 viewport 메타 태그 추가 (줌 허용)
 st.markdown("""
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
 """, unsafe_allow_html=True)
 
 # 사이드바 폭 설정 (반응형)
@@ -48,6 +48,20 @@ st.markdown("""
     
     /* 모바일: 전체 화면 오버레이 */
     @media (max-width: 768px) {
+        /* 햄버거 메뉴 버튼 강제 표시 */
+        [data-testid='stSidebarCollapsedControl'] {
+            display: block !important;
+            position: fixed !important;
+            top: 0.75rem !important;
+            left: 0.75rem !important;
+            z-index: 999999 !important;
+            background: #1f77b4 !important;
+            color: white !important;
+            border-radius: 0.5rem !important;
+            padding: 0.5rem !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+        
         /* 사이드바가 열릴 때 전체 화면 */
         [data-testid='stSidebar'][aria-expanded='true'] {
             position: fixed !important;
@@ -55,7 +69,7 @@ st.markdown("""
             top: 0 !important;
             width: 100% !important;
             height: 100vh !important;
-            z-index: 999999 !important;
+            z-index: 999998 !important;
             background-color: white !important;
         }
         
@@ -73,15 +87,12 @@ st.markdown("""
             max-width: 100% !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
+            padding-top: 4rem !important; /* 햄버거 메뉴 공간 확보 */
         }
         
-        /* 사이드바 토글 버튼 항상 표시 */
-        [data-testid='stSidebarCollapsedControl'] {
-            display: block !important;
-            position: fixed !important;
-            top: 0.5rem !important;
-            left: 0.5rem !important;
-            z-index: 999 !important;
+        /* 앱 헤더 여백 */
+        [data-testid='stAppViewContainer'] {
+            padding-top: 3rem !important;
         }
     }
 </style>
