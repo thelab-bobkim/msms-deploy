@@ -201,6 +201,8 @@ st.markdown("""
         min-height: 44px;
         cursor: pointer !important;
         pointer-events: auto !important;
+        position: relative !important;
+        z-index: 1 !important;
     }
     
     .stButton>button:hover {
@@ -209,9 +211,25 @@ st.markdown("""
     }
     
     /* 폼 제출 버튼 강화 */
-    button[type="submit"] {
+    button[type="submit"],
+    button[kind="primary"],
+    button[kind="secondary"] {
         cursor: pointer !important;
         pointer-events: auto !important;
+        position: relative !important;
+        z-index: 10 !important;
+    }
+    
+    /* Primary 버튼 추가 스타일 */
+    button[kind="primary"] {
+        background-color: #1f77b4 !important;
+        color: white !important;
+    }
+    
+    /* 모든 Streamlit 버튼이 클릭 가능하도록 */
+    div[data-testid="stButton"] {
+        pointer-events: auto !important;
+        z-index: 1 !important;
     }
     
     /* 사이드바 스타일 개선 */
