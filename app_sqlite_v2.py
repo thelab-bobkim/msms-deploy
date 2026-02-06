@@ -48,18 +48,33 @@ st.markdown("""
     
     /* 모바일: 전체 화면 오버레이 */
     @media (max-width: 768px) {
-        /* 햄버거 메뉴 버튼 강제 표시 */
+        /* 햄버거 메뉴 버튼 강제 표시 - 항상 보이게 */
         [data-testid='stSidebarCollapsedControl'] {
             display: block !important;
             position: fixed !important;
-            top: 0.75rem !important;
-            left: 0.75rem !important;
+            top: 1rem !important;
+            left: 1rem !important;
             z-index: 999999 !important;
-            background: #1f77b4 !important;
+            background: linear-gradient(135deg, #1f77b4 0%, #1565c0 100%) !important;
             color: white !important;
-            border-radius: 0.5rem !important;
-            padding: 0.5rem !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            border-radius: 50% !important;
+            width: 56px !important;
+            height: 56px !important;
+            padding: 0 !important;
+            box-shadow: 0 4px 16px rgba(31, 119, 180, 0.5) !important;
+            border: 3px solid white !important;
+            font-size: 1.5rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+        
+        /* 햄버거 아이콘 스타일 */
+        [data-testid='stSidebarCollapsedControl'] svg {
+            width: 24px !important;
+            height: 24px !important;
+            color: white !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)) !important;
         }
         
         /* 사이드바 닫기 버튼 스타일 개선 */
@@ -706,26 +721,28 @@ with st.sidebar:
     
     # 모바일 사이드바 하단 닫기 버튼
     st.markdown("---")
+    
+    # Streamlit 버튼으로 변경 (클릭 가능하도록)
+    if st.button("✕ 필터 닫기", key="close_sidebar_btn", type="primary", use_container_width=True):
+        st.session_state['_sidebar_state'] = 'collapsed'
+        st.rerun()
+    
+    # JavaScript로 사이드바 닫기 보조
     st.markdown("""
-    <div style='text-align: center; padding: 1rem 0;'>
-        <button onclick='document.querySelector("[data-testid=stSidebarCollapsedControl]").click()' 
-                class='mobile-close-sidebar'
-                style='
-                    background: #1f77b4;
-                    color: white;
-                    border: none;
-                    border-radius: 0.5rem;
-                    padding: 1rem 2rem;
-                    font-size: 1.1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    width: 100%;
-                    min-height: 44px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                '>
-            ✕ 필터 닫기
-        </button>
-    </div>
+    <script>
+    // 필터 닫기 버튼 클릭 시 사이드바 닫기
+    setTimeout(function() {
+        const closeBtn = document.querySelector('button[kind="primary"]');
+        if (closeBtn && closeBtn.textContent.includes('필터 닫기')) {
+            closeBtn.addEventListener('click', function() {
+                const collapseBtn = document.querySelector('[data-testid="stSidebarCollapsedControl"]');
+                if (collapseBtn) {
+                    collapseBtn.click();
+                }
+            });
+        }
+    }, 1000);
+    </script>
     """, unsafe_allow_html=True)
 
 
