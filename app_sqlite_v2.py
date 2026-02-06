@@ -48,65 +48,38 @@ st.markdown("""
     
     /* 모바일: 전체 화면 오버레이 */
     @media (max-width: 768px) {
-        /* 메인 화면: 플로팅 필터 버튼 추가 */
-        body::after {
-            content: '🔍 필터';
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 999997;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 1rem 1.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-            cursor: pointer;
-            display: block;
-            pointer-events: auto;
-        }
-        
-        /* 햄버거 메뉴 버튼 강제 표시 */
+        /* 햄버거 메뉴 버튼 - 극단적으로 눈에 띄게 */
         [data-testid='stSidebarCollapsedControl'] {
             display: block !important;
             position: fixed !important;
-            top: 1rem !important;
-            left: 1rem !important;
-            z-index: 999999 !important;
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+            top: 0.5rem !important;
+            left: 0.5rem !important;
+            z-index: 9999999 !important;
+            background: black !important;
             color: white !important;
-            border-radius: 50% !important;
-            width: 60px !important;
-            height: 60px !important;
+            border-radius: 8px !important;
+            width: 70px !important;
+            height: 70px !important;
             padding: 0 !important;
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5) !important;
-            border: 4px solid white !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+            border: 5px solid #FFD700 !important;
+            animation: pulse 2s infinite !important;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         
         /* 햄버거 아이콘 */
         [data-testid='stSidebarCollapsedControl'] svg {
-            width: 28px !important;
-            height: 28px !important;
-            color: white !important;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) !important;
+            width: 32px !important;
+            height: 32px !important;
+            color: #FFD700 !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5)) !important;
         }
         
-        /* 사이드바 닫기 버튼 (상단 X 버튼) */
-        [data-testid='stSidebar'] button[kind='header'] {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
-            color: white !important;
-            border-radius: 50% !important;
-            width: 50px !important;
-            height: 50px !important;
-            padding: 0 !important;
-            font-size: 1.5rem !important;
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
-            border: 3px solid white !important;
-        }
-        
-        /* 사이드바가 열릴 때 전체 화면 */
+        /* 사이드바 배경을 어둡게 */
         [data-testid='stSidebar'][aria-expanded='true'] {
             position: fixed !important;
             left: 0 !important;
@@ -114,14 +87,37 @@ st.markdown("""
             width: 100% !important;
             height: 100vh !important;
             z-index: 999998 !important;
-            background-color: #f8f9fa !important;
+            background-color: #2c3e50 !important;
             overflow-y: auto !important;
         }
         
         [data-testid='stSidebar'][aria-expanded='true'] > div:first-child {
             width: 100% !important;
-            background-color: #f8f9fa !important;
-            padding-top: 4rem !important;
+            background-color: #2c3e50 !important;
+            padding-top: 5rem !important;
+            color: white !important;
+        }
+        
+        /* 사이드바 내부 텍스트 흰색으로 */
+        [data-testid='stSidebar'] * {
+            color: white !important;
+        }
+        
+        /* 사이드바 닫기 버튼 (상단 X 버튼) - 금색으로 */
+        [data-testid='stSidebar'] button[kind='header'] {
+            background: black !important;
+            color: #FFD700 !important;
+            border-radius: 8px !important;
+            width: 60px !important;
+            height: 60px !important;
+            padding: 0 !important;
+            font-size: 2rem !important;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+            border: 4px solid #FFD700 !important;
+            position: fixed !important;
+            top: 0.5rem !important;
+            right: 0.5rem !important;
+            z-index: 9999999 !important;
         }
         
         /* 메인 컨텐츠 전체 너비 사용 */
@@ -742,53 +738,35 @@ with st.sidebar:
     
     # 모바일 사이드바 하단 닫기 버튼
     st.markdown("---")
-    st.markdown("### ✕ 필터 닫기")
+    st.markdown("### 👇 여기를 눌러 닫기")
     
-    # 큰 닫기 버튼
-    close_clicked = st.button(
-        "닫기", 
-        key="close_sidebar_bottom",
-        type="primary",
-        use_container_width=True,
-        help="필터를 닫고 메인 화면으로 돌아갑니다"
-    )
-    
-    # 닫기 버튼 스타일
+    # HTML 버튼 (확실하게 클릭 가능)
     st.markdown("""
-    <style>
-    /* 사이드바 하단 닫기 버튼 강조 */
-    button[key="close_sidebar_bottom"] {
-        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
-        color: white !important;
-        font-size: 1.2rem !important;
-        font-weight: 700 !important;
-        padding: 1.5rem !important;
-        border-radius: 1rem !important;
-        border: none !important;
-        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
-        min-height: 60px !important;
-    }
-    </style>
-    
-    <script>
-    // 닫기 버튼 클릭 시 사이드바 닫기
-    setTimeout(function() {
-        // 모든 primary 버튼 찾기
-        const buttons = document.querySelectorAll('button[kind="primary"]');
-        buttons.forEach(function(btn) {
-            if (btn.textContent.includes('닫기')) {
-                btn.onclick = function(e) {
-                    e.preventDefault();
-                    const hamburger = document.querySelector('[data-testid="stSidebarCollapsedControl"]');
-                    if (hamburger) {
-                        hamburger.click();
-                    }
-                    return false;
-                };
-            }
-        });
-    }, 500);
-    </script>
+    <div style='margin: 2rem 0; text-align: center;'>
+        <button 
+            onclick='
+                var btn = document.querySelector("[data-testid=stSidebarCollapsedControl]");
+                if(btn) btn.click();
+            '
+            style='
+                background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+                color: black;
+                border: 5px solid black;
+                border-radius: 15px;
+                padding: 2rem;
+                font-size: 1.5rem;
+                font-weight: 900;
+                width: 100%;
+                min-height: 80px;
+                cursor: pointer;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+                text-transform: uppercase;
+                letter-spacing: 2px;
+            '
+        >
+            ✕ 필터 닫기 ✕
+        </button>
+    </div>
     """, unsafe_allow_html=True)
 
 
