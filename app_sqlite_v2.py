@@ -95,12 +95,29 @@ st.markdown("""
             width: 100% !important;
             background-color: #2c3e50 !important;
             padding-top: 5rem !important;
+        }
+        
+        /* 사이드바 내부 텍스트와 라벨만 흰색으로 */
+        [data-testid='stSidebar'] label,
+        [data-testid='stSidebar'] p,
+        [data-testid='stSidebar'] h1,
+        [data-testid='stSidebar'] h2,
+        [data-testid='stSidebar'] h3,
+        [data-testid='stSidebar'] span {
             color: white !important;
         }
         
-        /* 사이드바 내부 텍스트 흰색으로 */
-        [data-testid='stSidebar'] * {
-            color: white !important;
+        /* 사이드바 입력 필드 스타일 */
+        [data-testid='stSidebar'] input,
+        [data-testid='stSidebar'] select {
+            background: white !important;
+            color: black !important;
+        }
+        
+        /* 사이드바 버튼은 정상 작동하도록 */
+        [data-testid='stSidebar'] button {
+            cursor: pointer !important;
+            pointer-events: auto !important;
         }
         
         /* 사이드바 닫기 버튼 (상단 X 버튼) - 금색으로 */
@@ -181,12 +198,20 @@ st.markdown("""
         border-radius: 0.5rem;
         font-weight: 600;
         transition: all 0.3s ease;
-        min-height: 44px; /* 터치 친화적 크기 */
+        min-height: 44px;
+        cursor: pointer !important;
+        pointer-events: auto !important;
     }
     
     .stButton>button:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* 폼 제출 버튼 강화 */
+    button[type="submit"] {
+        cursor: pointer !important;
+        pointer-events: auto !important;
     }
     
     /* 사이드바 스타일 개선 */
@@ -736,18 +761,29 @@ with st.sidebar:
         st.warning("프로젝트가 없습니다")
         sel_id = None
     
-    # 모바일 사이드바 하단 닫기 버튼
+    # 모바일 사이드바 하단 닫기 버튼 (모바일에서만 표시)
     st.markdown("---")
-    st.markdown("### 👇 여기를 눌러 닫기")
     
-    # HTML 버튼 (확실하게 클릭 가능)
+    # 모바일에서만 표시되는 닫기 버튼
     st.markdown("""
-    <div style='margin: 2rem 0; text-align: center;'>
+    <style>
+    /* 데스크톱에서는 닫기 버튼 숨김 */
+    .mobile-close-button {
+        display: none;
+    }
+    
+    /* 모바일에서만 표시 */
+    @media (max-width: 768px) {
+        .mobile-close-button {
+            display: block !important;
+        }
+    }
+    </style>
+    
+    <div class='mobile-close-button' style='margin: 2rem 0; text-align: center;'>
+        <h3 style='color: #FFD700; text-align: center; margin-bottom: 1rem;'>👇 여기를 눌러 닫기</h3>
         <button 
-            onclick='
-                var btn = document.querySelector("[data-testid=stSidebarCollapsedControl]");
-                if(btn) btn.click();
-            '
+            id='closeSidebarBtn'
             style='
                 background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
                 color: black;
@@ -767,6 +803,21 @@ with st.sidebar:
             ✕ 필터 닫기 ✕
         </button>
     </div>
+    
+    <script>
+    // 닫기 버튼 클릭 이벤트
+    (function() {
+        const btn = document.getElementById('closeSidebarBtn');
+        if (btn) {
+            btn.onclick = function() {
+                const hamburger = document.querySelector('[data-testid="stSidebarCollapsedControl"]');
+                if (hamburger) {
+                    hamburger.click();
+                }
+            };
+        }
+    })();
+    </script>
     """, unsafe_allow_html=True)
 
 
