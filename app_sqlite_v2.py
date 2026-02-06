@@ -48,43 +48,62 @@ st.markdown("""
     
     /* 모바일: 전체 화면 오버레이 */
     @media (max-width: 768px) {
-        /* 햄버거 메뉴 버튼 강제 표시 - 항상 보이게 */
+        /* 메인 화면: 플로팅 필터 버튼 추가 */
+        body::after {
+            content: '🔍 필터';
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999997;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 1rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            cursor: pointer;
+            display: block;
+            pointer-events: auto;
+        }
+        
+        /* 햄버거 메뉴 버튼 강제 표시 */
         [data-testid='stSidebarCollapsedControl'] {
             display: block !important;
             position: fixed !important;
             top: 1rem !important;
             left: 1rem !important;
             z-index: 999999 !important;
-            background: linear-gradient(135deg, #1f77b4 0%, #1565c0 100%) !important;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
             color: white !important;
             border-radius: 50% !important;
-            width: 56px !important;
-            height: 56px !important;
+            width: 60px !important;
+            height: 60px !important;
             padding: 0 !important;
-            box-shadow: 0 4px 16px rgba(31, 119, 180, 0.5) !important;
-            border: 3px solid white !important;
-            font-size: 1.5rem !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5) !important;
+            border: 4px solid white !important;
         }
         
-        /* 햄버거 아이콘 스타일 */
+        /* 햄버거 아이콘 */
         [data-testid='stSidebarCollapsedControl'] svg {
-            width: 24px !important;
-            height: 24px !important;
+            width: 28px !important;
+            height: 28px !important;
             color: white !important;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)) !important;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) !important;
         }
         
-        /* 사이드바 닫기 버튼 스타일 개선 */
+        /* 사이드바 닫기 버튼 (상단 X 버튼) */
         [data-testid='stSidebar'] button[kind='header'] {
-            background: #1f77b4 !important;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
             color: white !important;
-            border-radius: 0.5rem !important;
-            padding: 0.5rem 1rem !important;
-            font-size: 1.2rem !important;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+            border-radius: 50% !important;
+            width: 50px !important;
+            height: 50px !important;
+            padding: 0 !important;
+            font-size: 1.5rem !important;
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4) !important;
+            border: 3px solid white !important;
         }
         
         /* 사이드바가 열릴 때 전체 화면 */
@@ -102,6 +121,7 @@ st.markdown("""
         [data-testid='stSidebar'][aria-expanded='true'] > div:first-child {
             width: 100% !important;
             background-color: #f8f9fa !important;
+            padding-top: 4rem !important;
         }
         
         /* 메인 컨텐츠 전체 너비 사용 */
@@ -109,7 +129,8 @@ st.markdown("""
             max-width: 100% !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
-            padding-top: 4rem !important; /* 햄버거 메뉴 공간 확보 */
+            padding-top: 5rem !important;
+            padding-bottom: 5rem !important;
         }
         
         /* 앱 헤더 여백 */
@@ -721,27 +742,52 @@ with st.sidebar:
     
     # 모바일 사이드바 하단 닫기 버튼
     st.markdown("---")
+    st.markdown("### ✕ 필터 닫기")
     
-    # Streamlit 버튼으로 변경 (클릭 가능하도록)
-    if st.button("✕ 필터 닫기", key="close_sidebar_btn", type="primary", use_container_width=True):
-        st.session_state['_sidebar_state'] = 'collapsed'
-        st.rerun()
+    # 큰 닫기 버튼
+    close_clicked = st.button(
+        "닫기", 
+        key="close_sidebar_bottom",
+        type="primary",
+        use_container_width=True,
+        help="필터를 닫고 메인 화면으로 돌아갑니다"
+    )
     
-    # JavaScript로 사이드바 닫기 보조
+    # 닫기 버튼 스타일
     st.markdown("""
+    <style>
+    /* 사이드바 하단 닫기 버튼 강조 */
+    button[key="close_sidebar_bottom"] {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+        color: white !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        padding: 1.5rem !important;
+        border-radius: 1rem !important;
+        border: none !important;
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4) !important;
+        min-height: 60px !important;
+    }
+    </style>
+    
     <script>
-    // 필터 닫기 버튼 클릭 시 사이드바 닫기
+    // 닫기 버튼 클릭 시 사이드바 닫기
     setTimeout(function() {
-        const closeBtn = document.querySelector('button[kind="primary"]');
-        if (closeBtn && closeBtn.textContent.includes('필터 닫기')) {
-            closeBtn.addEventListener('click', function() {
-                const collapseBtn = document.querySelector('[data-testid="stSidebarCollapsedControl"]');
-                if (collapseBtn) {
-                    collapseBtn.click();
-                }
-            });
-        }
-    }, 1000);
+        // 모든 primary 버튼 찾기
+        const buttons = document.querySelectorAll('button[kind="primary"]');
+        buttons.forEach(function(btn) {
+            if (btn.textContent.includes('닫기')) {
+                btn.onclick = function(e) {
+                    e.preventDefault();
+                    const hamburger = document.querySelector('[data-testid="stSidebarCollapsedControl"]');
+                    if (hamburger) {
+                        hamburger.click();
+                    }
+                    return false;
+                };
+            }
+        });
+    }, 500);
     </script>
     """, unsafe_allow_html=True)
 
